@@ -85,7 +85,7 @@
     (assoc *ctx* "ctx" (pr-str ctx))))
 
 (defmacro with-log-context
-  "Given a hash map and a body (sequence), add the hash map to the log4j2 mapped
+  "Given a hash map and a code body, add the hash map to the log4j2 mapped
    diagnostic context, and execute the body.
 
    The logging context is accumulated dynamically."
@@ -96,14 +96,16 @@
          ~@body))))
 
 (defmacro with-log-tag
-  ""
+  "Given a keyword or string and a code body, push the tag onto the log4j2
+   stack context, and execute the body."
   [tag & body]
   `(let [tag# ~tag]
      (with-open [_# (CloseableThreadContext/push (->str tag#))]
        ~@body)))
 
 (defmacro with-log-uuid
-  ""
+  "Given a code body, push a unique tag onto the log4j2 stack context, and
+   execute the body."
   [& body]
   `(with-log-tag (str (random-uuid))
      ~@body))
