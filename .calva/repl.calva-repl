@@ -1,0 +1,61 @@
+; This is the Calva REPL Window.
+; It's just a file, really, with some special treatment from Calva.
+; Use it as a REPL input prompt if you like. (When the REPL is connected.)
+; TIPS: The keyboard shortcut `ctrl+alt+o r` shows and focuses this window
+; Please see https://calva.io/repl-window/ for more info.
+; Happy coding! ♥️
+
+; TIPS: As with any Clojure file when the REPL is connected:
+; - `alt+enter` evaluates the current top level form.
+; - `ctrl+enter` evaluates the current form.
+; Special for this file:
+; - `alt+up` and `alt+down` traverse up and down the REPL command history
+;    when the cursor is after the last contents at the prompt
+;
+; See also the Calva Inspector: https://calva.io/inspector/
+clj꞉user꞉> 
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error macroexpanding clojure.core/ns at (src/org/corfield/logging4j2.clj:3:1).
+; ((:import [org.apache.logging.log4j.Logger])) - failed: Extra input spec: :clojure.core.specs.alpha/ns-form
+clj꞉org.corfield.logging4j2꞉> 
+; Execution error (IllegalArgumentException) at nrepl.middleware.interruptible-eval/evaluator$run$fn (interruptible_eval.clj:106).
+; Error - no matches found for static method TRACE in class org.apache.logging.log4j.Logger
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error (IllegalArgumentException) compiling org.apache.logging.log4j.Logger/log at (src/org/corfield/logging4j2.clj:25:1).
+; No matching method log found taking 2 args for interface org.apache.logging.log4j.Logger
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error (IllegalArgumentException) compiling org.apache.logging.log4j.Logger/log at (src/org/corfield/logging4j2.clj:22:1).
+; No matching method log found taking 2 args for interface org.apache.logging.log4j.Logger
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error (IllegalArgumentException) compiling org.apache.logging.log4j.Logger/log at (src/org/corfield/logging4j2.clj:22:1).
+; No matching method log found taking 2 args for interface org.apache.logging.log4j.Logger
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:0:0).
+; Unable to resolve symbol: LogManager in this context
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error (IllegalArgumentException) compiling org.apache.logging.log4j.Logger/log at (src/org/corfield/logging4j2.clj:23:1).
+; No matching method log found taking 2 args for interface org.apache.logging.log4j.Logger
+clj꞉org.corfield.logging4j2꞉> 
+; Execution error (ClassCastException) at org.corfield.logging4j2/eval12875 (REPL:21).
+; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'app')
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:56:3).
+; No such namespace: CloseableThreadContext
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:56:3).
+; No such var: org.corfield.logging4j2/tag
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:41:5).
+; Unable to resolve symbol: *ctx* in this context
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:78:5).
+; Can't take value of a macro: #'org.corfield.logging4j2/info
+clj꞉org.corfield.logging4j2꞉> 
+; Execution error (ClassCastException) at org.corfield.logging4j2/->str (REPL:29).
+; class clojure.lang.Keyword cannot be cast to class java.lang.String (clojure.lang.Keyword is in unnamed module of loader 'app'; java.lang.String is in module java.base of loader 'bootstrap')
+clj꞉org.corfield.logging4j2꞉> 
+; Syntax error compiling at (src/org/corfield/logging4j2.clj:0:0).
+; Unable to resolve symbol: World! in this context
+clj꞉org.corfield.logging4j2꞉> 
+; Evaluation of file logging4j2.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉org.corfield.logging4j2꞉> 

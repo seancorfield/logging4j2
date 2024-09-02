@@ -1,0 +1,20 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.4"}
+
+        org.apache.logging.log4j/log4j-api {:mvn/version "2.23.1"}
+        ;; bridge into log4j:
+        org.apache.logging.log4j/log4j-1.2-api {:mvn/version "2.23.1"}
+        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.23.1"}
+        org.apache.logging.log4j/log4j-jul {:mvn/version "2.23.1"}
+        org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.23.1"}
+        org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.23.1"}}
+ :aliases
+ {:test
+  {:extra-paths ["test"]
+   :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
+                io.github.cognitect-labs/test-runner
+                {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}
+  :build {:deps {io.github.clojure/tools.build
+                 {:mvn/version "0.10.5"}
+                 slipset/deps-deploy {:mvn/version "0.2.2"}}
+          :ns-default build}}}
