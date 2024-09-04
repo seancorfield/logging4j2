@@ -1,9 +1,14 @@
 ;; copyright (c) 2024 Sean Corfield
 
 (ns org.corfield.logging4j2
-  (:import (org.apache.logging.log4j CloseableThreadContext
-                                     Level Logger LogManager
-                                     Marker MarkerManager)))
+  (:require [clojure.string :as str])
+  (:import (org.apache.logging.log4j
+            CloseableThreadContext
+            Level
+            LogManager
+            Logger
+            Marker
+            MarkerManager)))
 
 (set! *warn-on-reflection* true)
 
@@ -58,7 +63,8 @@
    If multiple strings or keywords are given, use the first one as the name
    of the marker and the rest as the names of parents."
   ^Marker [s & parents]
-  (let [m (MarkerManager/getMarker (->str s))]
+  (let [m (MarkerManager/getMarker
+           (-> s (->str) (str/upper-case) (str/replace "-" "_")))]
     (when (seq parents)
       (.setParents m (into-array Marker (map as-marker parents))))
     m))
@@ -109,7 +115,6 @@
   [& body]
   `(with-log-tag (str (random-uuid))
      ~@body))
-
 
 (comment
   (log :info "Hello, World!")

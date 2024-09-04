@@ -48,12 +48,12 @@ dynamic context, for the execution of the body.
   (logger/info "Hello, world!")) ; INFO {uid=1234} Hello, world!
 
 (with-log-tag (str "user_" (:id user))
-  (logger/info "Hello, world!")) ; INFO {user_1234} Hello, world!
+  (logger/info "Hello, world!")) ; INFO [user_1234] Hello, world!
 
 (with-log-uuid
   (logger/info "Hello, world!")) ; is equivalent to
 (with-log-tag (str (random-uuid))
-  (logger/info "Hello, world!")) ; INFO {8b21769c-33c5-42cb-b6c4-146ce8bb875f} Hello, world!
+  (logger/info "Hello, world!")) ; INFO [8b21769c-33c5-42cb-b6c4-146ce8bb875f] Hello, world!
 ```
 
 Support for markers is provided by the `as-marker` function, which accepts
