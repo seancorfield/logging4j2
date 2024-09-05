@@ -2,11 +2,15 @@
 
 (ns ^:no-doc org.corfield.logging4j2.impl
   (:require [clojure.string :as str])
-  (:import (org.apache.logging.log4j
-            Level
-            Logger
-            Marker
-            MarkerManager)))
+  (:import (java.util Map)
+           (org.apache.logging.log4j Level
+                                     Logger
+                                     Marker
+                                     MarkerManager)
+           (org.apache.logging.log4j.message MapMessage
+                                             Message
+                                             ParameterizedMessage
+                                             SimpleMessage)))
 
 (set! *warn-on-reflection* true)
 
@@ -17,6 +21,12 @@
    :warn  Level/WARN
    :error Level/ERROR
    :fatal Level/FATAL})
+
+(defn ->str
+  "Produce a string from anything. For a keyword, produce the fully-qualified
+   name of the keyword."
+  [s]
+  (cond-> (str s) (keyword? s) (subs 1)))
 
 (defn log*
   "Internal function to log a message at a given level."
@@ -29,7 +39,14 @@
         (if (instance? Throwable (first more))
           next
           (cons nil more))
-        msg (apply print-str more)]
+        [pattern & args :as more] more
+        ^Message
+        msg (cond (and (string? pattern) (str/includes? pattern "{}"))
+                  (ParameterizedMessage. ^String pattern (object-array args))
+                  (and (map? pattern) (empty? args))
+                  (MapMessage. ^Map (update-keys pattern ->str))
+                  :else
+                  (SimpleMessage. ^String (apply print-str more)))]
     (cond (and marker throwable)
           (.log logger level marker msg throwable)
           marker
@@ -59,12 +76,6 @@
                *ctx*
                ctx)
     (assoc *ctx* "ctx" (pr-str ctx))))
-
-(defn ->str
-  "Produce a string from anything. For a keyword, produce the fully-qualified
-   name of the keyword."
-  [s]
-  (cond-> (str s) (keyword? s) (subs 1)))
 
 (defn as-marker
   "Given a string or keyword and a possibly empty sequence of parents,

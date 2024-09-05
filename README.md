@@ -64,6 +64,33 @@ the generic `log` macro).
 `(as-marker :sql-update :sql)` returns a marker object that represents the
 string `"SQL_UPDATE"` with the marker `"SQL"` as its parent.
 
+### Possible Arguments
+
+Most logging will look like this:
+
+```clojure
+(logger/info "some message")
+;; or
+(logger/info my-exception "some message")
+;; or
+(logger/info my-marker "some message")
+;; or
+(logger/info my-marker my-exception "some message")
+```
+
+If multiple message arguments are provided, they are generally converted to
+strings and concatenated with spaces between them, except as follows:
+
+* If the first message argument is a string and contains one or more `{}`
+placeholders, then the remaining arguments are treated as values for
+those placeholders and a
+[`ParameterizedMessage`](https://logging.apache.org/log4j/2.x/javadoc/log4j-api/org/apache/logging/log4j/message/ParameterizedMessage)
+is constructed.
+* If a single message argument is provided and it is a hash map, then a
+[`MapMessage`](https://logging.apache.org/log4j/2.x/log4j-api/apidocs/org/apache/logging/log4j/message/MapMessage.html)
+is constructed, with the keys of the Clojure hash map converted to strings and
+the values left as-is.
+
 ## License
 
 Copyright © 2024 Sean Corfield.

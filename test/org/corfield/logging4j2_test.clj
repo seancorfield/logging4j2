@@ -31,3 +31,13 @@
   (sut/log :info (sut/as-marker :hello/world) "Hello, Marker!")
   (sut/log :warn (sut/as-marker :child :parent) "Hello, Marker!")
   (is true))
+
+(deftest formatting-test
+  (sut/log :info "Hello, {}!" "World")
+  (sut/log :info "Hello, {} {}!" "World" "Extra")
+  (sut/log :info "Hello, {} {} {}!" "World" "Extra" "More")
+  (is true))
+
+(deftest map-test
+  (sut/log :warn {:hello "World" 13 42})
+  (sut/log :warn {:hello/world :how.are/you?}))
