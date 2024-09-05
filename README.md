@@ -2,8 +2,8 @@
 
 A Clojure wrapper for log4j2, intended as a partial replacement for
 [`clojure.tools.logging`](https://github.com/clojure/tools.logging), that
-supports MDC (mapped diagnostic context) and markers directly, in a
-Clojure-friendly manner.
+supports MDC (mapped diagnostic context), NDC (nested diagnostic context)
+and markers directly, in a Clojure-friendly manner.
 
 This library explicitly depends on log4j2 and all of the bridge libraries
 that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x and 2.x).
@@ -30,18 +30,17 @@ generic `log` macro that accepts a level keyword as its first argument.
 (logger/log :info "Hello, world!") ; equivalent to the above
 ```
 
-Support for MDC is provided via the `with-log-context`, `with-log-tag`,
-and `with-log-uuid` macros:
+Support for MDC and NDC is provided via the `with-log-context`, `with-log-tag`,
+and `with-log-uuid` macros (see **MDC and NDC** below for more detail):
 
 * `with-log-context` accepts a hash map as its first argument, followed by a
 body of code to execute. The keys and values in the hash map are added to the
-dynamic context as strings, for the execution of the body, and a dynamic var
-is used behind the scenes to track nested contexts.
+context as strings, for the execution of the body.
 * `with-log-tag` accepts a keyword or string as its first argument, followed
-by a body of code to execute. The tag is pushed onto the dynamic context, for
+by a body of code to execute. The tag is pushed onto the context, for
 the execution of the body.
 * `with-log-uuid` a body of code to execute. A unique tag is pushed onto the
-dynamic context, for the execution of the body.
+context, for the execution of the body.
 
 ```clojure
 (with-log-context {:uid (:id user)}
@@ -90,6 +89,21 @@ is constructed.
 [`MapMessage`](https://logging.apache.org/log4j/2.x/log4j-api/apidocs/org/apache/logging/log4j/message/MapMessage.html)
 is constructed, with the keys of the Clojure hash map converted to strings and
 the values left as-is.
+
+### MDC and NDC
+
+Mapped Diagnostic Context (MDC) and Nested Diagnostic Context (NDC) are supported
+(as noted above) by the three `with-log-*` macros. Nested calls to these macros
+will accumulate the map context and the stack of tags automatically, within
+the current thread.
+
+The underlying context for log4j2 is thread-local by default. `with-log-context`
+uses a dynamic var to shadow the context map so that if you use `with-log-context`
+inside a thread, the dynamic context of the parent thread will be merged in
+(but the log4j2 context for that new thread will be empty otherwise).
+
+`with-log-tag` does not use a dynamic var and so the context is not inherited
+from the parent thread, for calls within the new thread.
 
 ## License
 

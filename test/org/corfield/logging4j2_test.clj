@@ -40,4 +40,23 @@
 
 (deftest map-test
   (sut/log :warn {:hello "World" 13 42})
-  (sut/log :warn {:hello/world :how.are/you?}))
+  (sut/log :warn {:hello/world :how.are/you?})
+  (is true))
+
+(deftest future-test
+  (let [p (promise)]
+    (sut/with-log-context {:uid 1234}
+      (sut/with-log-tag :main/tag
+        (future
+          (sut/info "Hello, Basic Future!")
+          (deliver p true))))
+    @p)
+  (let [p (promise)]
+    (sut/with-log-context {:uid 1234}
+      (sut/with-log-tag :main/tag
+        (future
+          (sut/with-log-context {}
+            (sut/info "Hello, Context Future!"))
+          (deliver p true))))
+    @p)
+  (is true))
