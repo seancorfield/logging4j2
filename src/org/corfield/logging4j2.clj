@@ -1,22 +1,20 @@
 ;; copyright (c) 2024 Sean Corfield
 
 (ns org.corfield.logging4j2
-  (:require [clojure.string :as str]
-            [org.corfield.logging4j2.impl :as impl])
+  (:require [org.corfield.logging4j2.impl :as impl])
   (:import (org.apache.logging.log4j
             CloseableThreadContext
             Level
             LogManager
             Logger
-            Marker
-            MarkerManager)))
+            Marker)))
 
 (set! *warn-on-reflection* true)
 
 (defmacro log
   "Write a message to the log."
   [level & args]
-  `(let [^Logger logger# (LogManager/getLogger (str *ns*))
+  `(let [^Logger logger# (LogManager/getLogger (str ~*ns*))
          ^Level  level#  (get impl/levels ~level Level/ERROR)]
      (when (.isEnabled logger# level#)
        (impl/log* logger# level# ~@args))))

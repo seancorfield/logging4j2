@@ -1,11 +1,9 @@
 ;; copyright (c) 2024 Sean Corfield
 
-(ns org.corfield.logging4j2.impl
+(ns ^:no-doc org.corfield.logging4j2.impl
   (:require [clojure.string :as str])
   (:import (org.apache.logging.log4j
-            CloseableThreadContext
             Level
-            LogManager
             Logger
             Marker
             MarkerManager)))
