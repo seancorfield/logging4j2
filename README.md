@@ -92,6 +92,8 @@ the values left as-is.
 
 ### MDC and NDC
 
+_[Subject to change -- see [#1](https://github.com/seancorfield/logging4j2/issues/1) for details!]_
+
 Mapped Diagnostic Context (MDC) and Nested Diagnostic Context (NDC) are supported
 (as noted above) by the three `with-log-*` macros. Nested calls to these macros
 will accumulate the map context and the stack of tags automatically, within
