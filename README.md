@@ -100,7 +100,9 @@ the current thread.
 The underlying context for log4j2 is thread-local by default. `with-log-context`
 uses a dynamic var to shadow the context map so that if you use `with-log-context`
 inside a thread, the dynamic context of the parent thread will be merged in
-(but the log4j2 context for that new thread will be empty otherwise).
+(but the log4j2 context for that new thread will be empty otherwise). If you're
+passing functions between threads, you may need to use `bound-fn` or `bound-fn*`
+in order to convey the dynamic context into the new thread.
 
 `with-log-tag` does not use a dynamic var and so the context is not inherited
 from the parent thread, for calls within the new thread.
