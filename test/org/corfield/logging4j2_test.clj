@@ -66,8 +66,13 @@
         (future
           (sut/with-log-context {:additional "context"}
             (sut/with-log-tag :additional/tag
-              (sut/info "Hello, Fresh Context Future!")))
-          (deliver p true))))
+              (sut/info "Hello, Fresh Context Future!")
+              (future
+                (sut/with-log-inherited
+                  (sut/with-log-context {:nested "context"}
+                    (sut/with-log-tag :nested/tag
+                      (sut/info "Hello, Nested Inherited Context Future!"))))
+                (deliver p true)))))))
     @p)
   (let [p (promise)]
     (sut/with-log-context {:uid 1234}

@@ -116,6 +116,8 @@ thread to inherit the MDC and NDC from the parent thread.
 If you're passing functions between threads, you may need to use `bound-fn`
 or `bound-fn*` in order to convey the dynamic context into the new thread.
 
+> Note: `with-log-inherited` will inherit the entire MDC/NDC from the dynamic parent context, even if there are intervening calls to `with-log-context`, `with-log-tag`, or `with-log-uuid` in the child thread, that did not inherit the context.
+
 ## License
 
 Copyright © 2024 Sean Corfield.
