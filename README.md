@@ -1,4 +1,4 @@
-# org.corfield/logging4j2
+# com.github.seancorfield/logging4j2
 
 A Clojure wrapper for log4j2, intended as a partial replacement for
 [`clojure.tools.logging`](https://github.com/clojure/tools.logging), that
@@ -15,7 +15,7 @@ that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x an
 Add the following dependency to your `deps.edn` file:
 
 ```clojure
-org.corfield/logging4j2 {:mvn/version "0.1.0-SNAPSHOT"}
+com.github.seancorfield/logging4j2 {:mvn/version "0.1.0-SNAPSHOT"}
 ```
 
 > Note: this library is a work in progress -- feedback is appreciated!
