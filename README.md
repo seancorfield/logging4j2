@@ -8,13 +8,17 @@ and markers directly, in a Clojure-friendly manner.
 This library explicitly depends on log4j2 and all of the bridge libraries
 that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x and 2.x).
 
+> Note: requires Clojure 1.11 or later.
+
 ## Installation
 
 Add the following dependency to your `deps.edn` file:
 
 ```clojure
-org.corfield/logging4j2 {:mvn/version "TBD"}
+org.corfield/logging4j2 {:mvn/version "0.1.0-SNAPSHOT"}
 ```
+
+> Note: this library is a work in progress -- feedback is appreciated!
 
 ## Usage
 
@@ -92,22 +96,25 @@ the values left as-is.
 
 ### MDC and NDC
 
-_[Subject to change -- see [#1](https://github.com/seancorfield/logging4j2/issues/1) for details!]_
-
 Mapped Diagnostic Context (MDC) and Nested Diagnostic Context (NDC) are supported
 (as noted above) by the three `with-log-*` macros. Nested calls to these macros
 will accumulate the map context and the stack of tags automatically, within
 the current thread.
 
-The underlying context for log4j2 is thread-local by default. `with-log-context`
-uses a dynamic var to shadow the context map so that if you use `with-log-context`
-inside a thread, the dynamic context of the parent thread will be merged in
-(but the log4j2 context for that new thread will be empty otherwise). If you're
-passing functions between threads, you may need to use `bound-fn` or `bound-fn*`
-in order to convey the dynamic context into the new thread.
+The underlying context for log4j2 is thread-local by default: each thread
+starts out with an empty context. This library also tracks MDC and NDC using
+a dynamic var in Clojure, so you can use `with-log-inherited` inside a spawned
+thread to inherit the MDC and NDC from the parent thread.
 
-`with-log-tag` does not use a dynamic var and so the context is not inherited
-from the parent thread, for calls within the new thread.
+```clojure
+(with-log-context {:uid (:id user)}
+  (future
+    (with-log-inherited
+      (logger/info "Hello, world!")))) ; INFO {uid=1234} Hello, world!
+```
+
+If you're passing functions between threads, you may need to use `bound-fn`
+or `bound-fn*` in order to convey the dynamic context into the new thread.
 
 ## License
 

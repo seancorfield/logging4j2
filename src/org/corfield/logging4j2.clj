@@ -41,7 +41,7 @@
   [ctx & body]
   `(let [ctx# (impl/stringize-context ~ctx)]
      (with-open [_# (CloseableThreadContext/putAll ctx#)]
-       (binding [impl/*ctx* ctx#]
+       (binding [impl/*ctx* (merge impl/*ctx* ctx#)]
          ~@body))))
 
 (defmacro with-log-tag
@@ -50,7 +50,18 @@
   [tag & body]
   `(let [tag# ~tag]
      (with-open [_# (CloseableThreadContext/push (impl/->str tag#))]
-       ~@body)))
+       (binding [impl/*stk* (conj impl/*stk* tag#)]
+         ~@body))))
+
+(defmacro with-log-inherited
+  "Given a code body, inherit the MDC dynamically (from the parent thread),
+   and execute the body."
+  [& body]
+  `(with-open [ctx# (CloseableThreadContext/putAll impl/*ctx*)]
+     ;; .pushAll hangs for some reason, so push each tag individually:
+     (doseq [tag# impl/*stk*]
+       (.push ctx# (impl/->str tag#)))
+     ~@body))
 
 (defmacro with-log-uuid
   "Given a code body, push a unique tag onto the log4j2 stack context, and

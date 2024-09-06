@@ -1,3 +1,5 @@
+;; copyright (c) 2024 Sean Corfield
+
 (ns build
   (:refer-clojure :exclude [test])
   (:require [clojure.tools.build.api :as b]
@@ -10,7 +12,7 @@
 (def class-dir "target/classes")
 
 (defn test "Run all the tests." [opts]
-  (let [basis    (b/create-basis {:aliases [:test]})
+  (let [basis    (b/create-basis {:aliases (into [:test] (:aliases opts))})
         cmds     (b/java-command
                   {:basis      basis
                     :main      'clojure.main
@@ -18,6 +20,11 @@
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
+
+(defn test-all "Multiversion testing." [opts]
+  (doseq [version [:1.11 :1.12]]
+    (println "\nTesting with Clojure" (name version))
+    (test (update opts :aliases (fnil conj []) version))))
 
 (defn- pom-template [version]
   [[:description "FIXME: my new library."]
@@ -46,7 +53,7 @@
           :pom-data  (pom-template version)))
 
 (defn ci "Run the CI pipeline of tests (and build the JAR)." [opts]
-  (test opts)
+  (test-all opts)
   (b/delete {:path "target"})
   (let [opts (jar-opts opts)]
     (println "\nWriting pom.xml...")

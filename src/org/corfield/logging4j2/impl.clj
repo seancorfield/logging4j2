@@ -58,9 +58,15 @@
 
 (def ^:dynamic *ctx*
   "So we can more easily carry logging context into threads.
-   (with-log-context {} ...) will merge in any dynamically known context from
+   (with-log-inherited ...) will merge in any dynamically known context from
    outer with-log-context calls."
   {})
+
+(def ^:dynamic *stk*
+  "So we can more easily carry logging stack into threads.
+   (with-log-inherited ...) will merge in any dynamically known stack from
+   outer with-log-tag calls."
+  [])
 
 (defn stringize-context
   "Given a logging context (that is hopefully a hash map), return a
@@ -73,9 +79,9 @@
                  (assoc m
                         (if (keyword? k) (name k) (str k))
                         (when (some? v) (pr-str v))))
-               *ctx*
+               {}
                ctx)
-    (assoc *ctx* "ctx" (pr-str ctx))))
+    {"ctx" (pr-str ctx)}))
 
 (defn as-marker
   "Given a string or keyword and a possibly empty sequence of parents,
