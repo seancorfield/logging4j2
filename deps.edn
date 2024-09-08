@@ -1,13 +1,13 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.11.4"}
 
-        org.apache.logging.log4j/log4j-api {:mvn/version "2.23.1"}
+        org.apache.logging.log4j/log4j-api {:mvn/version "2.24.0"}
         ;; bridge into log4j:
-        org.apache.logging.log4j/log4j-1.2-api {:mvn/version "2.23.1"}
-        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.23.1"}
-        org.apache.logging.log4j/log4j-jul {:mvn/version "2.23.1"}
-        org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.23.1"}
-        org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.23.1"}}
+        org.apache.logging.log4j/log4j-1.2-api {:mvn/version "2.24.0"}
+        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.24.0"}
+        org.apache.logging.log4j/log4j-jul {:mvn/version "2.24.0"}
+        org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.24.0"}
+        org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.24.0"}}
  :aliases
  {:test
   {:extra-paths ["test"]
