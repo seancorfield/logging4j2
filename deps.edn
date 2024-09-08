@@ -1,4 +1,4 @@
-{:paths ["src" "resources"]
+{:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.11.4"}
 
         org.apache.logging.log4j/log4j-api {:mvn/version "2.24.0"}
