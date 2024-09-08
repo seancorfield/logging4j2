@@ -47,15 +47,15 @@ the execution of the body.
 context, for the execution of the body.
 
 ```clojure
-(with-log-context {:uid (:id user)}
+(logger/with-log-context {:uid (:id user)}
   (logger/info "Hello, world!")) ; INFO {uid=1234} Hello, world!
 
-(with-log-tag (str "user_" (:id user))
+(logger/with-log-tag (str "user_" (:id user))
   (logger/info "Hello, world!")) ; INFO [user_1234] Hello, world!
 
-(with-log-uuid
+(logger/with-log-uuid
   (logger/info "Hello, world!")) ; is equivalent to
-(with-log-tag (str (random-uuid))
+(logger/with-log-tag (str (random-uuid))
   (logger/info "Hello, world!")) ; INFO [8b21769c-33c5-42cb-b6c4-146ce8bb875f] Hello, world!
 ```
 
@@ -107,9 +107,9 @@ a dynamic var in Clojure, so you can use `with-log-inherited` inside a spawned
 thread to inherit the MDC and NDC from the parent thread.
 
 ```clojure
-(with-log-context {:uid (:id user)}
+(logger/with-log-context {:uid (:id user)}
   (future
-    (with-log-inherited
+    (logger/with-log-inherited
       (logger/info "Hello, world!")))) ; INFO {uid=1234} Hello, world!
 ```
 
