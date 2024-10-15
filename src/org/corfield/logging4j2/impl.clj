@@ -59,16 +59,13 @@
         (if (instance? Throwable (first more))
           next
           (cons nil more))
-        [pattern & args :as more] more
+        [pattern & args] more
         ^MessageSupplier
         supplier (when (empty? args)
                    (cond (instance? MessageSupplier pattern)
                          pattern
                          (fn? pattern)
                          pattern
-                         #_
-                         (let [^MessageSupplier supplier pattern]
-                           supplier)
                          :else
                          nil))
         ^Message
