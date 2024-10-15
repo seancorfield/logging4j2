@@ -33,6 +33,19 @@
   ^Marker [s & parents]
   (impl/as-marker s parents))
 
+(defn as-message
+  "Given one or more arguments, return a Message object.
+
+   If message is a string and contains '{}', return a ParameterizedMessage
+   with any remaining arguments as parameters.
+
+   If message is a map, return a MapMessage.
+
+   Otherwise, return a SimpleMessage with all arguments stringified."
+  ^org.apache.logging.log4j.message.Message
+  [message & args]
+  (impl/as-message message args))
+
 (defmacro with-log-context
   "Given a hash map and a code body, add the hash map to the log4j2 mapped
    diagnostic context, and execute the body.

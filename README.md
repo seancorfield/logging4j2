@@ -94,6 +94,33 @@ is constructed.
 is constructed, with the keys of the Clojure hash map converted to strings and
 the values left as-is.
 
+You can build a `Message` directly with `logger/as-message`:
+
+```clojure
+(logger/as-message "Hello, {}!" "Parameter")
+;; => ParameterizedMessage
+(logger/as-message {:hello "world"})
+;; => MapMessage
+(logger/as-message "Hello," "World!")
+;; => SimpleMessage
+```
+
+If you are using Clojure 1.12 (or later), you can prove a `(fn [] ...)` which
+will be used as a `MessageSupplier` object:
+
+```clojure
+(logger/info (fn [] (logger/as-message "Hello, Supplier!")))
+```
+
+On Clojure 1.11, you have to construct the `MessageSupplier` object directly,
+for example by using `reify` to implement the `MessageSupplier` interface
+and provide the `get` method:
+
+```clojure
+(logger/info (reify org.apache.logging.log4j.message.MessageSupplier
+               (get [_] (logger/as-message "Hello, Supplier!"))))
+```
+
 ### MDC and NDC
 
 Mapped Diagnostic Context (MDC) and Nested Diagnostic Context (NDC) are supported

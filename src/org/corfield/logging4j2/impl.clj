@@ -10,7 +10,8 @@
            (org.apache.logging.log4j.message MapMessage
                                              Message
                                              ParameterizedMessage
-                                             SimpleMessage)))
+                                             SimpleMessage)
+           (org.apache.logging.log4j.util MessageSupplier)))
 
 (set! *warn-on-reflection* true)
 
@@ -28,6 +29,25 @@
   [s]
   (cond-> (str s) (keyword? s) (subs 1)))
 
+(defn as-message
+  "Given a message and a sequence of zero or more arguments,
+   return a Message object.
+
+   If message is a string and contains '{}', return a ParameterizedMessage
+   with any remaining arguments as parameters.
+
+   If message is a map, return a MapMessage.
+
+   Otherwise, return a SimpleMessage with all arguments stringified."
+  ^Message
+  [message args]
+  (cond (and (string? message) (str/includes? message "{}"))
+        (ParameterizedMessage. ^String message (object-array args))
+        (and (map? message) (empty? args))
+        (MapMessage. ^Map (update-keys message ->str))
+        :else
+        (SimpleMessage. ^String (apply print-str message args))))
+
 (defn log*
   "Internal function to log a message at a given level."
   [^Logger logger ^Level level & more]
@@ -40,21 +60,36 @@
           next
           (cons nil more))
         [pattern & args :as more] more
+        ^MessageSupplier
+        supplier (when (empty? args)
+                   (cond (instance? MessageSupplier pattern)
+                         pattern
+                         (fn? pattern)
+                         pattern
+                         #_
+                         (let [^MessageSupplier supplier pattern]
+                           supplier)
+                         :else
+                         nil))
         ^Message
-        msg (cond (and (string? pattern) (str/includes? pattern "{}"))
-                  (ParameterizedMessage. ^String pattern (object-array args))
-                  (and (map? pattern) (empty? args))
-                  (MapMessage. ^Map (update-keys pattern ->str))
-                  :else
-                  (SimpleMessage. ^String (apply print-str more)))]
-    (cond (and marker throwable)
-          (.log logger level marker msg throwable)
-          marker
-          (.log logger level marker msg)
-          throwable
-          (.log logger level msg throwable)
-          :else
-          (.log logger level msg))))
+        msg (when-not supplier (as-message pattern args))]
+    (if supplier
+      (cond (and marker throwable)
+            (.log logger level marker supplier throwable)
+            marker
+            (.log logger level marker supplier)
+            throwable
+            (.log logger level supplier throwable)
+            :else
+            (.log logger level supplier))
+      (cond (and marker throwable)
+            (.log logger level marker msg throwable)
+            marker
+            (.log logger level marker msg)
+            throwable
+            (.log logger level msg throwable)
+            :else
+            (.log logger level msg)))))
 
 (def ^:dynamic *ctx*
   "So we can more easily carry logging context into threads.

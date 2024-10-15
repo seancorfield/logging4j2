@@ -3,7 +3,8 @@
 (ns org.corfield.logging4j2-test
   (:require [clojure.test :refer [deftest is]]
             [clojure.tools.logging :as ctl]
-            [org.corfield.logging4j2 :as sut]))
+            [org.corfield.logging4j2 :as sut]
+            [clojure.string :as str]))
 
 (deftest sanity-test
   (sut/log :info "Hello, World!")
@@ -15,6 +16,16 @@
       (sut/info "Hello, Outer/Inner Tag!")))
   (sut/with-log-uuid
     (sut/fatal "Hello, UUID!"))
+  (is true))
+
+(deftest supplier-test
+  (sut/info (reify org.apache.logging.log4j.util.MessageSupplier
+              (get [_] (sut/as-message "Hello," "Reified Supplier!"))))
+  ;; we only support Clojure 1.11.0 or later;
+  ;; implicit suppliers only work for Clojure 1.12.0 or later:
+  (if (str/starts-with? (clojure-version) "1.11")
+    (sut/warn "MessageSupplier coercion not supported for Clojure 1.11")
+    (sut/info (fn [] (sut/as-message "Hello," "Implicit Supplier!"))))
   (is true))
 
 (deftest ctl-test
