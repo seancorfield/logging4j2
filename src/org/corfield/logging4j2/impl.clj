@@ -57,7 +57,7 @@
           (cons nil more))
         [^Throwable throwable & more]
         (if (instance? Throwable (first more))
-          next
+          more
           (cons nil more))
         [pattern & args] more
         ^MessageSupplier

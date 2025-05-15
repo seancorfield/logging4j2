@@ -19,12 +19,12 @@
      (when (.isEnabled logger# level#)
        (impl/log* logger# level# ~@args))))
 
-(defmacro trace "Write a trace message to the log." [& args] `(log :trace ~@args))
-(defmacro debug "Write a debug message to the log." [& args] `(log :debug ~@args))
-(defmacro info  "Write an info message to the log." [& args] `(log :info  ~@args))
+(defmacro trace "Write a trace message to the log."   [& args] `(log :trace ~@args))
+(defmacro debug "Write a debug message to the log."   [& args] `(log :debug ~@args))
+(defmacro info  "Write an info message to the log."   [& args] `(log :info  ~@args))
 (defmacro warn  "Write a warning message to the log." [& args] `(log :warn  ~@args))
-(defmacro error "Write an error message to the log." [& args] `(log :error ~@args))
-(defmacro fatal "Write a fatal message to the log." [& args] `(log :fatal ~@args))
+(defmacro error "Write an error message to the log."  [& args] `(log :error ~@args))
+(defmacro fatal "Write a fatal message to the log."   [& args] `(log :fatal ~@args))
 
 (defn as-marker
   "Given a string or keyword, return a Marker object.
