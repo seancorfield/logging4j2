@@ -1,4 +1,4 @@
-;; copyright (c) 2024 Sean Corfield
+;; copyright (c) 2024-2025 Sean Corfield
 
 (ns org.corfield.logging4j2-test
   (:require [clojure.test :refer [deftest is]]
@@ -32,7 +32,7 @@
   (ctl/log :info "Hello, c.t.l World!")
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
-      (ctl/info "Hello, c.t.l Tag and UUID!")))
+      (ctl/info "Hello, c.t.l Tag and UID!")))
   (sut/with-log-tag :outer/tag
     (sut/with-log-tag :inner/tag
       (ctl/info "Hello, c.t.l Outer/Inner Tag!")))

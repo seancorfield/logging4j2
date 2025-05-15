@@ -18,6 +18,30 @@ Add the following dependency to your `deps.edn` file:
 com.github.seancorfield/logging4j2 {:mvn/version "0.1.0-SNAPSHOT"}
 ```
 
+You may also need the following JVM properties when running your code
+to ensure that the log4j2 JUL bridge works correctly:
+
+```bash
+clojure -J-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
+  -J-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter \
+  -M -m your.namespace
+
+java -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
+  -Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter \
+  -jar your.jar
+```
+
+See [JUL-to-Log4j bridge docs](https://logging.apache.org/log4j/2.x/log4j-jul.html)
+for more information about the first of those two properties, and this
+[log4j-jul issue](https://github.com/apache/logging-log4j2/issues/2353)
+for more information about the second property.
+
+```clojure
+   ;; they can also be set in your deps.edn file, under an alias:
+   :jvm-opts ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+              "-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter"]
+```
+
 > Note: this library is a work in progress -- feedback is appreciated!
 
 ## Usage
@@ -147,6 +171,6 @@ or `bound-fn*` in order to convey the dynamic context into the new thread.
 
 ## License
 
-Copyright © 2024 Sean Corfield.
+Copyright © 2024-2025 Sean Corfield.
 
 Distributed under the Eclipse Public License version 1.0.

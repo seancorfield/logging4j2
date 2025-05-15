@@ -1,4 +1,4 @@
-;; copyright (c) 2024 Sean Corfield
+;; copyright (c) 2024-2025 Sean Corfield
 
 (ns build
   (:refer-clojure :exclude [test])

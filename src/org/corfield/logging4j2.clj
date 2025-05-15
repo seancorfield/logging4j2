@@ -1,4 +1,4 @@
-;; copyright (c) 2024 Sean Corfield
+;; copyright (c) 2024-2025 Sean Corfield
 
 (ns org.corfield.logging4j2
   (:require [org.corfield.logging4j2.impl :as impl])
