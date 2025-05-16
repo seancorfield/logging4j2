@@ -6,6 +6,8 @@
             [org.corfield.logging4j2 :as sut]
             [clojure.string :as str]))
 
+(set! *warn-on-reflection* true)
+
 (deftest sanity-test
   (sut/log :info "Hello, World!")
   (sut/with-log-tag :hello/world
@@ -25,7 +27,9 @@
   ;; implicit suppliers only work for Clojure 1.12.0 or later:
   (if (str/starts-with? (clojure-version) "1.11")
     (sut/warn "MessageSupplier coercion not supported for Clojure 1.11")
-    (sut/info (fn [] (sut/as-message "Hello," "Implicit Supplier!"))))
+    (do
+      (sut/info (fn [] (sut/as-message "Hello," "Implicit Supplier!")))
+      (sut/info #(sut/as-message "Hello," "Shorthand Supplier!"))))
   (is true))
 
 (deftest ctl-test

@@ -43,7 +43,7 @@ context as strings, for the execution of the body.
 * `with-log-tag` accepts a keyword or string as its first argument, followed
 by a body of code to execute. The tag is pushed onto the context, for
 the execution of the body.
-* `with-log-uuid` a body of code to execute. A unique tag is pushed onto the
+* `with-log-uuid` accepts a body of code to execute. A unique tag is pushed onto the
 context, for the execution of the body.
 
 ```clojure
@@ -109,7 +109,7 @@ If you are using Clojure 1.12 (or later), you can provide a `(fn [] ...)` which
 will be used as a `MessageSupplier` object:
 
 ```clojure
-(logger/info (fn [] (logger/as-message "Hello, Supplier!")))
+(logger/info #(logger/as-message "Hello, Supplier!"))
 ```
 
 On Clojure 1.11, you have to construct the `MessageSupplier` object directly,
