@@ -6,7 +6,7 @@
             [deps-deploy.deps-deploy :as dd]))
 
 (def lib 'com.github.seancorfield/logging4j2)
-(def version "1.0.1")
+(def version "1.0.2")
 #_ ; alternatively, use MAJOR.MINOR.COMMITS:
 (def version (format "1.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
@@ -28,7 +28,7 @@
 
 (defn- pom-template [version]
   [[:description "A log4j2 alternative to clojure.tools.logging."]
-   [:url "https://github.com/corfield/logging4j2"]
+   [:url "https://github.com/seancorfield/logging4j2"]
    [:licenses
     [:license
      [:name "Eclipse Public License"]
@@ -37,8 +37,8 @@
     [:developer
      [:name "Sean"]]]
    [:scm
-    [:url "https://github.com/corfield/logging4j2"]
-    [:connection "scm:git:https://github.com/corfield/logging4j2.git"]
+    [:url "https://github.com/seancorfield/logging4j2"]
+    [:connection "scm:git:https://github.com/seancorfield/logging4j2.git"]
     [:developerConnection "scm:git:ssh:git@github.com:corfield/logging4j2.git"]
     [:tag (str "v" version)]]])
 
