@@ -173,8 +173,8 @@ for more information about the second property.
 
 ## `clojure.tools.logging` Migration/FAQ
 
-c.t.l has `logf` but this library does not. For more uses (with `%s`), you
-can use a `ParameterizedMessage` -- just replace the `%s` with `{}` and you
+c.t.l has `logf` but this library does not. For most uses (with `%s`), you
+can use a `ParameterizedMessage` -- replace `%s` with `{}` and you
 should get the same behavior. For more complex cases, you can use
 `clojure.core/format` with the arguments to build a string for logging.
 
@@ -182,7 +182,7 @@ You will no longer need `-Dclojure.tools.logging.factory=clojure.tools.logging.i
 as this library uses log4j2 directly (c.t.l defaults to `slf4j`).
 
 If you want to get a `Logger` object directly, you can use
-`org.apache.logging.log4j.LogManager/getLogger` directly, passing a namespace
+`org.apache.logging.log4j.LogManager/getLogger`, passing a namespace
 name as a string. c.t.l provided a generic `get-logger` in its `impl` namespace.
 
 ## License
