@@ -15,7 +15,7 @@ that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x an
 Add the following dependency to your `deps.edn` file:
 
 ```clojure
-com.github.seancorfield/logging4j2 {:mvn/version "0.1.0-SNAPSHOT"}
+com.github.seancorfield/logging4j2 {:mvn/version "0.1.1-SNAPSHOT"}
 ```
 
 > Note: this library is a work in progress -- feedback is appreciated!
@@ -105,7 +105,7 @@ You can build a `Message` directly with `logger/as-message`:
 ;; => SimpleMessage
 ```
 
-If you are using Clojure 1.12 (or later), you can prove a `(fn [] ...)` which
+If you are using Clojure 1.12 (or later), you can provide a `(fn [] ...)` which
 will be used as a `MessageSupplier` object:
 
 ```clojure
@@ -170,6 +170,20 @@ for more information about the second property.
    :jvm-opts ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
               "-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter"]
 ```
+
+## `clojure.tools.logging` Migration/FAQ
+
+c.t.l has `logf` but this library does not. For more uses (with `%s`), you
+can use a `ParameterizedMessage` -- just replace the `%s` with `{}` and you
+should get the same behavior. For more complex cases, you can use
+`clojure.core/format` with the arguments to build a string for logging.
+
+You will no longer need `-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory`
+as this library uses log4j2 directly (c.t.l defaults to `slf4j`).
+
+If you want to get a `Logger` object directly, you can use
+`org.apache.logging.log4j.LogManager/getLogger` directly, passing a namespace
+name as a string. c.t.l provided a generic `get-logger` in its `impl` namespace.
 
 ## License
 
