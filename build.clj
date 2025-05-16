@@ -6,7 +6,7 @@
             [deps-deploy.deps-deploy :as dd]))
 
 (def lib 'com.github.seancorfield/logging4j2)
-(def version "1.0.0")
+(def version "1.0.1")
 #_ ; alternatively, use MAJOR.MINOR.COMMITS:
 (def version (format "1.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
@@ -27,7 +27,7 @@
     (test (update opts :aliases (fnil conj []) version))))
 
 (defn- pom-template [version]
-  [[:description "FIXME: my new library."]
+  [[:description "A log4j2 alternative to clojure.tools.logging."]
    [:url "https://github.com/corfield/logging4j2"]
    [:licenses
     [:license

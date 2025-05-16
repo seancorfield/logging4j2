@@ -1,6 +1,7 @@
 ;; copyright (c) 2024-2025 Sean Corfield
 
 (ns org.corfield.logging4j2-test
+  "These tests require visual inspection of the log output at present."
   (:require [clojure.test :refer [deftest is]]
             [clojure.tools.logging :as ctl]
             [org.corfield.logging4j2 :as sut]
