@@ -15,7 +15,7 @@ that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x an
 Add the following dependency to your `deps.edn` file:
 
 ```clojure
-com.github.seancorfield/logging4j2 {:mvn/version "0.1.1-SNAPSHOT"}
+com.github.seancorfield/logging4j2 {:mvn/version "1.0.0"}
 ```
 
 > Note: this library is a work in progress -- feedback is appreciated!
