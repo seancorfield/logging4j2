@@ -150,8 +150,66 @@ or `bound-fn*` in order to convey the dynamic context into the new thread.
 
 ## `java.util.logging` Bridge
 
-You may also need the following JVM properties when running your code
-to ensure that the log4j2 JUL bridge works correctly:
+In order to correctly bridge `java.util.logging` (JUL) to log4j2, you need to
+provide some sort of configuration. Several options are described in the
+[JUL-to-Log4j bridge docs](https://logging.apache.org/log4j/2.x/log4j-jul.html),
+which also explains the limitations imposed by JUL that make this necessary.
+
+The simplest approach is to set the `java.util.logging.manager` JVM property.
+If you can guarantee that no logging is done before your application gets
+control (in your `-main` function), then you can set this property in code:
+
+```clojure
+(System/setProperty "java.util.logging.manager"
+                    "org.apache.logging.log4j.jul.LogManager")
+```
+
+You can put this as a top-level form in your main namespace, e.g., immediately
+after the `ns` form.
+
+If your code is running in a context that may initialize JUL before your
+application gets control (e.g., a servlet container), then you need to
+set this property as a JVM property when starting the JVM, e.g.,
+
+```bash
+java -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
+  -jar your.jar
+```
+
+If you are using the Clojure CLI, you can either set it directly or via an
+alias. Setting it directly using the CLI's `-J` option:
+
+```bash
+clojure -J-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
+  -M -m your.namespace
+```
+
+Setting it via an alias in `deps.edn`:
+
+```clojure
+{:aliases
+ {:jul
+  {:jvm-opts ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]}}}
+```
+
+Then you can run your code with the alias:
+
+```bash
+clojure -M:jul -m your.namespace
+```
+
+If you configure logging levels for log4j2 and they do not seem to work as
+expected, it's possible that you may be running into this
+[log4j-jul issue](https://github.com/apache/logging-log4j2/issues/2353),
+where some code is setting the JUL logging level programmatically and
+overriding your configuration. With log4j2 2.24.0 and later, this should
+not be a problem, but if you want that programmatic setting to be effective,
+i.e., to override your configuration, you can set the `log4j2.julLoggerAdapter`
+JVM property to `org.apache.logging.log4j.jul.CoreLoggerAdapter` (which
+was the default behavior in log4j2 2.23.0).
+
+As above, you can set this via the CLI's `-J` option or via an alias in
+`deps.edn`, directly for the `java` command:
 
 ```bash
 clojure -J-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
@@ -161,17 +219,6 @@ clojure -J-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
 java -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
   -Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter \
   -jar your.jar
-```
-
-See [JUL-to-Log4j bridge docs](https://logging.apache.org/log4j/2.x/log4j-jul.html)
-for more information about the first of those two properties, and this
-[log4j-jul issue](https://github.com/apache/logging-log4j2/issues/2353)
-for more information about the second property.
-
-```clojure
-   ;; they can also be set in your deps.edn file, under an alias:
-   :jvm-opts ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
-              "-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter"]
 ```
 
 ## `clojure.tools.logging` Migration/FAQ
