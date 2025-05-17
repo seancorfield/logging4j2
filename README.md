@@ -209,13 +209,9 @@ JVM property to `org.apache.logging.log4j.jul.CoreLoggerAdapter` (which
 was the default behavior in log4j2 2.23.0).
 
 As above, you can set this via the CLI's `-J` option or via an alias in
-`deps.edn`, directly for the `java` command:
+`deps.edn`, or directly for the `java` command:
 
 ```bash
-clojure -J-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
-  -J-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter \
-  -M -m your.namespace
-
 java -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
   -Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter \
   -jar your.jar
