@@ -148,6 +148,71 @@ or `bound-fn*` in order to convey the dynamic context into the new thread.
 
 > Note: `with-log-inherited` will inherit the entire MDC/NDC from the dynamic parent context, even if there are intervening calls to `with-log-context`, `with-log-tag`, or `with-log-uuid` in the child thread, that did not inherit the context.
 
+## Configuration
+
+Log4j2 is very flexible and can be confgured via XML, JSON, YAML, or properties
+files. See the [log4j2 configuration documentation](https://logging.apache.org/log4j/2.x/manual/configuration.html).
+
+The configuration file can either be on the classpath (e.g., in your `resources`
+folder), or you can specify the name/location using the `log4j2.configurationFile`
+JVM property or the `LOG4J_CONFIGURATION_FILE` environment variable.
+
+I prefer configuration via properties files, so I usually create typically have
+something like this in `resources/log4j2.properties`:
+
+```properties
+rootLogger.level = info
+rootLogger.appenderRef.stdout.ref = STDOUT
+rootLogger.appenderRef.file.ref = logfile
+
+appender.console.type = Console
+appender.console.name = STDOUT
+appender.console.filter.threshold.type = ThresholdFilter
+appender.console.filter.threshold.level = info
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = [%c] %x %X %highlight{%m}%n
+```
+
+For development, I usually have a second properties file that is in a dev-only
+directory (added to the classpath via an alias), called `log4j2-test.properties`:
+
+```properties
+# so that log4j2 checks every 30 seconds for changes in configuration:
+monitorInterval = 30
+
+rootLogger.level = debug
+rootLogger.appenderRef.stdout.ref = STDOUT
+rootLogger.appenderRef.file.ref = logfile
+
+appender.console.type = Console
+appender.console.name = STDOUT
+appender.console.filter.threshold.type = ThresholdFilter
+appender.console.filter.threshold.level = debug
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = [%c] %x %X %highlight{%m}%n
+```
+
+You may also want to configure the log level threshold higher for some libraries
+that are very chatty at `info` or `debug`:
+
+```properties
+# Chatty libraries we need to suppress:
+logger.sshj.name = net.schmizz.sshj
+logger.sshj.level = warn
+
+logger.hikari.name = com.zaxxer.hikari
+logger.hikari.level = warn
+
+logger.authnet.name = net.authorize
+logger.authnet.level = warn
+
+logger.eclipse1.name = com.eclipse
+logger.eclipse1.level = warn
+
+logger.eclipse2.name = org.eclipse
+logger.eclipse2.level = warn
+```
+
 ## `java.util.logging` Bridge
 
 In order to correctly bridge `java.util.logging` (JUL) to log4j2, you need to
