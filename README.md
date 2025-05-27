@@ -21,6 +21,9 @@ Add the following dependency to your `deps.edn` file:
 com.github.seancorfield/logging4j2 {:mvn/version "1.0.2"}
 ```
 
+This version of the library depends on log4j2 2.24.3, which is the
+latest stable release as of May 2025.
+
 > Note: this library is a work in progress -- feedback is appreciated!
 
 ## Usage
