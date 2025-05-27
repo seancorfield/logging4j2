@@ -282,6 +282,16 @@ java -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager \
   -jar your.jar
 ```
 
+## logj42 and `tools.build`
+
+If you are using `tools.build` (`build.clj`) to build uberjars,
+and you are using either this library or using log4j2 directly,
+you probably need to look at this
+[log4j2 conflict handler for `tools.build`](https://github.com/seancorfield/build-uber-log4j2-handler).
+If your project has dependencies that provide log4j2 plugins
+(such as templates), using the conflict handler will ensure
+that those plugins have their configuration merged correctly.
+
 ## `clojure.tools.logging` Migration/FAQ
 
 c.t.l has `logf` but this library does not. For most uses (with `%s`), you
