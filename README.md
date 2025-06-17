@@ -160,7 +160,7 @@ The configuration file can either be on the classpath (e.g., in your `resources`
 folder), or you can specify the name/location using the `log4j2.configurationFile`
 JVM property or the `LOG4J_CONFIGURATION_FILE` environment variable.
 
-I prefer configuration via properties files, so I usually create typically have
+I prefer configuration via properties files, so I typically have
 something like this in `resources/log4j2.properties`:
 
 ```properties
