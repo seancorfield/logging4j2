@@ -22,7 +22,7 @@ com.github.seancorfield/logging4j2 {:mvn/version "1.0.4"}
 ```
 
 This version of the library depends on log4j2 2.25.1, which is the
-latest stable release as of June 2025.
+latest stable release as of July 2025.
 
 > Note: this library is a work in progress -- feedback is appreciated!
 
