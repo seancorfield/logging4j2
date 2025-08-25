@@ -20,7 +20,7 @@
    :jvm-opts ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
               "-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter"]}
   :1.11 {:override-deps {org.clojure/clojure {:mvn/version "1.11.4"}}}
-  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.1"}}}
+  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.2"}}}
   :build {:deps {io.github.clojure/tools.build
                  {:mvn/version "0.10.10"}
                  slipset/deps-deploy {:mvn/version "0.2.2"}}
