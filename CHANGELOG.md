@@ -1,6 +1,7 @@
 # Change Log
 
-1.0.next in progress
+1.0.5 -- 2025-09-23
+* Update log4j2 to 2.25.2
 * Update dev/test deps.
 
 1.0.4 -- 2025-07-13
