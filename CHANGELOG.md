@@ -1,6 +1,7 @@
 # Change Log
 
 1.0.7 in progress
+* Upgrade from EPL-1.0 to EPL-2.0 for broader compatibility. Explicitly allow for relicensing of HoneySQL code under Apache-2.0.
 * Update dev/test deps.
 
 1.0.6 -- 2025-12-16
