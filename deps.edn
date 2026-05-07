@@ -1,13 +1,13 @@
 {:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.11.4"}
 
-        org.apache.logging.log4j/log4j-api {:mvn/version "2.25.4"}
+        org.apache.logging.log4j/log4j-api {:mvn/version "2.26.0"}
         ;; bridge into log4j:
-        org.apache.logging.log4j/log4j-1.2-api {:mvn/version "2.25.4"}
-        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.25.4"}
-        org.apache.logging.log4j/log4j-jul {:mvn/version "2.25.4"}
-        org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.25.4"}
-        org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.25.4"}}
+        org.apache.logging.log4j/log4j-1.2-api {:mvn/version "2.26.0"}
+        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.26.0"}
+        org.apache.logging.log4j/log4j-jul {:mvn/version "2.26.0"}
+        org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.26.0"}
+        org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.26.0"}}
  :aliases
  {:test
   {:extra-paths ["test"]
@@ -22,6 +22,6 @@
   :1.11 {:override-deps {org.clojure/clojure {:mvn/version "1.11.4"}}}
   :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.4"}}}
   :build {:deps {io.github.clojure/tools.build
-                 {:mvn/version "0.10.12"}
-                 slipset/deps-deploy {:mvn/version "0.2.2"}}
+                 {:mvn/version "0.10.13"}
+                 slipset/deps-deploy {:mvn/version "0.2.3"}}
           :ns-default build}}}
