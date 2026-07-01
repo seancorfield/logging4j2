@@ -6,7 +6,7 @@
             [deps-deploy.deps-deploy :as dd]))
 
 (def lib 'com.github.seancorfield/logging4j2)
-(def version "1.0.8")
+(def version "1.0.9") ; version in progress
 #_ ; alternatively, use MAJOR.MINOR.COMMITS:
 (def version (format "1.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
