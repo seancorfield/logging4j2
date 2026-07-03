@@ -1,6 +1,7 @@
 # Change Log
 
-1.0.next in progress
+1.0.9 -- 2026-07-02
+* Update log4j2 to 2.26.1.
 * Update dev/test deps.
 
 1.0.8 -- 2026-05-07
@@ -9,7 +10,7 @@
 
 1.0.7 -- 2026-03-30
 * Update log4j2 to 2.25.4.
-* Upgrade from EPL-1.0 to EPL-2.0 for broader compatibility. Explicitly allow for relicensing of `logging4j2`` code under Apache-2.0.
+* Upgrade from EPL-1.0 to EPL-2.0 for broader compatibility. Explicitly allow for relicensing of `logging4j2` code under Apache-2.0.
 * Update dev/test deps.
 
 1.0.6 -- 2025-12-16
