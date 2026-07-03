@@ -21,6 +21,7 @@
               "-Dlog4j2.julLoggerAdapter=org.apache.logging.log4j.jul.CoreLoggerAdapter"]}
   :1.11 {:override-deps {org.clojure/clojure {:mvn/version "1.11.4"}}}
   :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.5"}}}
+  :1.13 {:override-deps {org.clojure/clojure {:mvn/version "1.13.0-alpha2"}}}
   :build {:deps {io.github.clojure/tools.build
                  {:mvn/version "0.10.14"}
                  slipset/deps-deploy {:mvn/version "0.2.5"}}
