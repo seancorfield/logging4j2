@@ -22,7 +22,7 @@
   opts)
 
 (defn test-all "Multiversion testing." [opts]
-  (doseq [version [:1.11 :1.12]]
+  (doseq [version [:1.11 :1.12 :1.13]]
     (println "\nTesting with Clojure" (name version))
     (test (update opts :aliases (fnil conj []) version))))
 
