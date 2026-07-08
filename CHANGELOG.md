@@ -1,5 +1,8 @@
 # Change Log
 
+1.0.next in progress
+* Update dev/test deps.
+
 1.0.9 -- 2026-07-02
 * Update log4j2 to 2.26.1.
 * Update dev/test deps.
