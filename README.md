@@ -13,6 +13,8 @@ that route other logging frameworks to log4j2 (jcl, jul, log4j 1.x, slf4j 1.x an
 
 > Note: requires Clojure 1.11 or later.
 
+> [My AI Usage Statement](https://corfield.org/blog/2026/08/02/ai/)
+
 ## Installation
 
 Add the following dependency to your `deps.edn` file:
