@@ -35,7 +35,7 @@
      [:url "https://www.eclipse.org/legal/epl-2.0"]]]
    [:developers
     [:developer
-     [:name "Sean"]]]
+     [:name "Sean Corfield"]]]
    [:scm
     [:url "https://github.com/seancorfield/logging4j2"]
     [:connection "scm:git:https://github.com/seancorfield/logging4j2.git"]

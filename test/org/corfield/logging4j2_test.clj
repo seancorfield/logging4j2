@@ -1,4 +1,4 @@
-;; copyright (c) 2024-2025 Sean Corfield
+;; copyright (c) 2024-2026 Sean Corfield
 
 (ns org.corfield.logging4j2-test
   "These tests require visual inspection of the log output at present."

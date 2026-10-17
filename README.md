@@ -302,6 +302,10 @@ can use a `ParameterizedMessage` -- replace `%s` with `{}` and you
 should get the same behavior. For more complex cases, you can use
 `clojure.core/format` with the arguments to build a string for logging.
 
+c.t.l has `spy` (and `spyf`) but this library does not. I believe that for
+debugging, `tap->` (in Clojure 1.13, and `tap>` in earlier versions) are better
+choices for inspecting values during development and debugging.
+
 You will no longer need `-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory`
 as this library uses log4j2 directly (c.t.l defaults to `slf4j`).
 
