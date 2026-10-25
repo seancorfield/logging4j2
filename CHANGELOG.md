@@ -1,7 +1,8 @@
 # Change Log
 
 1.0.10 in progress
-* Start converting tests to a form that actually checks the log output (as a first step toward CI and automation).
+* Converted tests to a form that actually checks the log output.
+* Added GitHub Actions to automate CI and deployment.
 * Switch build process to use `bb`.
 * Update dev/test deps.
 
