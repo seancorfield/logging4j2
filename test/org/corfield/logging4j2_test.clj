@@ -26,97 +26,142 @@
            (is (re-find match# output#)))))))
 
 (deftest sanity-test
-  (log-expect [" INFO " "[]" "{}" "Hello, World!"]
-              (sut/log :info "Hello, World!"))
+  (log-expect
+   [" INFO " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :info "Hello, World!"))
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
-      (log-expect ["[hello/world]" "{uid=1234}" "Hello, Tag and UID!"]
-                  (sut/info "Hello, Tag and UID!"))))
+      (log-expect
+       ["[hello/world]" "{uid=1234}" "//" "Hello, Tag and UID!"]
+       (sut/info "Hello, Tag and UID!"))))
   (sut/with-log-tag :outer/tag
     (sut/with-log-tag :inner/tag
-      (log-expect ["[outer/tag, inner/tag]" "{}" "Hello, Outer/Inner Tag!"]
-                  (sut/info "Hello, Outer/Inner Tag!"))))
+      (log-expect
+       ["[outer/tag, inner/tag]" "{}" "//" "Hello, Outer/Inner Tag!"]
+       (sut/info "Hello, Outer/Inner Tag!"))))
   (sut/with-log-uuid
-    (log-expect [" FATAL " #"\[[-0-9a-f]+\]" "{}" "Hello, UUID!"]
-                (sut/fatal "Hello, UUID!"))))
+    (log-expect
+     [" FATAL " #"\[[-0-9a-f]+\]" "{}" "//" "Hello, UUID!"]
+     (sut/fatal "Hello, UUID!"))))
 
 (deftest supplier-test
-  (sut/info (reify org.apache.logging.log4j.util.MessageSupplier
-              (get [_] (sut/as-message "Hello," "Reified Supplier!"))))
+  (log-expect
+   [" INFO " "[]" "{}" "//" "Hello, Reified Supplier!"]
+   (sut/info (reify org.apache.logging.log4j.util.MessageSupplier
+               (get [_] (sut/as-message "Hello," "Reified Supplier!")))))
   ;; we only support Clojure 1.11.0 or later;
   ;; implicit suppliers only work for Clojure 1.12.0 or later:
   (if (str/starts-with? (clojure-version) "1.11")
-    (sut/warn "MessageSupplier coercion not supported for Clojure 1.11")
-    (do
-      (sut/info (fn [] (sut/as-message "Hello," "Implicit Supplier!")))
-      (sut/info #(sut/as-message "Hello," "Shorthand Supplier!"))))
-  (is true))
+    (log-expect
+     [" WARN " "MessageSupplier coercion not supported for Clojure 1.11"]
+     (sut/warn "MessageSupplier coercion not supported for Clojure 1.11"))
+    (log-expect
+     [" INFO " "Hello, Implicit Supplier!" "Hello, Shorthand Supplier!"]
+     (do
+       (sut/info (fn [] (sut/as-message "Hello," "Implicit Supplier!")))
+       (sut/info #(sut/as-message "Hello," "Shorthand Supplier!"))))))
 
 (deftest ctl-test
-  (ctl/log :info "Hello, c.t.l World!")
+  (log-expect
+   [" INFO " "[]" "{}" "Hello, c.t.l World!"]
+   (ctl/log :info "Hello, c.t.l World!"))
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
-      (ctl/info "Hello, c.t.l Tag and UID!")))
+      (log-expect
+       ["[hello/world]" "{uid=1234}" "//" "Hello, c.t.l Tag and UID!"]
+       (ctl/info "Hello, c.t.l Tag and UID!"))))
   (sut/with-log-tag :outer/tag
     (sut/with-log-tag :inner/tag
-      (ctl/info "Hello, c.t.l Outer/Inner Tag!")))
+      (log-expect
+       ["[outer/tag, inner/tag]" "{}" "//" "Hello, c.t.l Outer/Inner Tag!"]
+       (ctl/info "Hello, c.t.l Outer/Inner Tag!"))))
   (sut/with-log-uuid
-    (ctl/fatal "Hello, c.t.l UUID!"))
-  (is true))
+    (log-expect
+     ;; default clojure.tools.logging implementation is slf4j, which doesn't
+     ;; really have a FATAL level, so it produces ERROR :(
+     [" ERROR " #"\[[-0-9a-f]+\]" "{}" "//" "Hello, c.t.l UUID!"]
+     (ctl/fatal "Hello, c.t.l UUID!"))))
 
 (deftest marker-test
-  (sut/log :info (sut/as-marker :hello/world) "Hello, Marker!")
-  (sut/log :warn (sut/as-marker :child :parent) "Hello, Marker with Parent!")
-  (is true))
+  (log-expect
+   [" INFO " "[]" "{}" "/HELLO/WORLD/" "Hello, Marker!"]
+   (sut/log :info (sut/as-marker :hello/world) "Hello, Marker!"))
+  (log-expect
+   [" WARN " "[]" "{}" "/CHILD[ PARENT ]/" "Hello, Marker with Parent!"]
+   (sut/log :warn (sut/as-marker :child :parent) "Hello, Marker with Parent!")))
 
 (deftest formatting-test
-  (sut/log :info "Hello, {}!" "Parameter")
-  (sut/log :info "Hello, {} {}!" "Two" "Parameters")
-  (sut/log :info "Hello, {} {} {}!" "Three" "Parameters" "Provided")
-  (is true))
+  (log-expect
+   [" INFO " "[]" "{}" "//" "Hello, Parameter!"]
+   (sut/log :info "Hello, {}!" "Parameter"))
+  (log-expect
+   ["Hello, Two Parameters!"]
+   (sut/log :info "Hello, {} {}!" "Two" "Parameters"))
+  (log-expect
+   ["Hello, Three Parameters Provided!"]
+   (sut/log :info "Hello, {} {} {}!" "Three" "Parameters" "Provided")))
 
 (deftest map-test
-  (sut/log :warn {:hello "MapMessage" 13 42})
-  (sut/log :warn {:hello/world :how.are/you?})
-  (is true))
+  (log-expect
+   [" WARN " "[]" "{}" "//" "13=\"42\"" "hello=\"MapMessage\""]
+   (sut/log :warn {:hello "MapMessage" 13 42}))
+  (log-expect
+   ["hello/world=\":how.are/you?\""]
+   (sut/log :warn {:hello/world :how.are/you?})))
 
 (deftest future-test
   (let [p (promise)]
-    (sut/with-log-context {:uid 1234}
-      (sut/with-log-tag :main/tag
-        (future
-          (sut/info "Hello, Basic Future!")
-          (deliver p true))))
-    @p)
+    (log-expect
+     [" INFO " "[]" "{}" "//" "Hello, Basic Future!"]
+     (do
+       (sut/with-log-context {:uid 1234}
+         (sut/with-log-tag :main/tag
+           (future
+             (sut/info "Hello, Basic Future!")
+             (deliver p true))))
+       @p)))
   (let [p (promise)]
-    (sut/with-log-context {:uid 1234}
-      (sut/with-log-tag :main/tag
-        (future
-          (sut/info "Hello, Empty Context Future!")
-          (deliver p true))))
-    @p)
+    (log-expect
+     ["[]" "{}" "//" "Hello, Empty Context Future!"]
+     (do
+       (sut/with-log-context {:uid 1234}
+         (sut/with-log-tag :main/tag
+           (future
+             (sut/info "Hello, Empty Context Future!")
+             (deliver p true))))
+       @p)))
   (let [p (promise)]
-    (sut/with-log-context {:uid 1234}
-      (sut/with-log-tag :main/tag
-        (future
-          (sut/with-log-context {:additional "context"}
-            (sut/with-log-tag :additional/tag
-              (sut/info "Hello, Fresh Context Future!")
-              (future
-                (sut/with-log-inherited
-                  (sut/with-log-context {:nested "context"}
-                    (sut/with-log-tag :nested/tag
-                      (sut/info "Hello, Nested Inherited Context Future!"))))
-                (deliver p true)))))))
-    @p)
+    (log-expect
+     [; the first log entry there:
+      "[additional/tag] {additional=\"context\"} // - Hello, Fresh Context Future!"
+      ; the second log entry there:
+      (str "[main/tag, additional/tag, nested/tag] {additional=\"context\", "
+           "nested=\"context\", uid=1234} // - Hello, Nested Inherited Context Future!")]
+     (do
+       (sut/with-log-context {:uid 1234}
+         (sut/with-log-tag :main/tag
+           (future
+             (sut/with-log-context {:additional "context"}
+               (sut/with-log-tag :additional/tag
+                 (sut/info "Hello, Fresh Context Future!")
+                 (future
+                   (sut/with-log-inherited
+                     (sut/with-log-context {:nested "context"}
+                       (sut/with-log-tag :nested/tag
+                         (sut/info "Hello, Nested Inherited Context Future!"))))
+                   (deliver p true)))))))
+       @p)))
   (let [p (promise)]
-    (sut/with-log-context {:uid 1234}
-      (sut/with-log-tag :main/tag
-        (future
-          (sut/with-log-inherited
-            (sut/with-log-context {:additional "context"}
-              (sut/with-log-tag :additional/tag
-                (sut/info "Hello, Inherited Context Future!"))))
-          (deliver p true))))
-    @p)
-  (is true))
+    (log-expect
+     ["[main/tag, additional/tag]" "{additional=\"context\", uid=1234}" "//"
+      "Hello, Inherited Context Future!"]
+     (do
+       (sut/with-log-context {:uid 1234}
+         (sut/with-log-tag :main/tag
+           (future
+             (sut/with-log-inherited
+               (sut/with-log-context {:additional "context"}
+                 (sut/with-log-tag :additional/tag
+                   (sut/info "Hello, Inherited Context Future!"))))
+             (deliver p true))))
+       @p))))
