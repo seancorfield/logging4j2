@@ -23,7 +23,7 @@
   {:main-opts   ["-m" "cognitect.test-runner"]}
 
   :1.11 {:override-deps {org.clojure/clojure {:mvn/version "1.11.4"}}}
-  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.5"}}}
-  :1.13 {:override-deps {org.clojure/clojure {:mvn/version "1.13.0-alpha9"}}}
+  :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.6"}}}
+  :1.13 {:override-deps {org.clojure/clojure {:mvn/version "1.13.0-alpha10"}}}
 
   :neil {:project {:version "1.0.9"}}}}
