@@ -1,0 +1,19 @@
+{:paths ["src" "."]
+ :deps {io.github.babashka/deps-deploy {:mvn/version "0.0.1"}}
+ :tasks
+ {:requires [build]
+
+  test {:doc "Run the test suite."
+        :exec-fn build/run-tests}
+
+  test:all {:doc "Run all tests for different Clojure versions."
+            :exec-fn build/run-tests
+            :exec-args {:all-versions true}}
+
+  ci {:doc "Run the CI pipeline of tests and build the JAR."
+      :depends [test:all]
+      :exec-fn build/jar}
+
+  ci:deploy {:doc "Deploy the JAR we just built to Clojars."
+             :depends [ci]
+             :exec-fn build/deploy}}}

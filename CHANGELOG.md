@@ -1,6 +1,8 @@
 # Change Log
 
-1.0.next in progress
+1.0.10 in progress
+* Start converting tests to a form that actually checks the log output (as a first step toward CI and automation).
+* Switch build process to use `bb`.
 * Update dev/test deps.
 
 1.0.9 -- 2026-07-02

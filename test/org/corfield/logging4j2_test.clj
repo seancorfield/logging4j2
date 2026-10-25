@@ -9,17 +9,36 @@
 
 (set! *warn-on-reflection* true)
 
+(def ^:private log-file
+  "This must match the log4j2-test.properties configuration!"
+  "/tmp/logging4j2-test.log")
+
+(defmacro log-expect [matches & body]
+  `(do
+     ;; ensure log is clear before running the test:
+     (spit log-file "")
+     ;; run the test:
+     (do ~@body)
+     (let [output# (slurp log-file)]
+       (doseq [match# ~matches]
+         (if (string? match#)
+           (is (str/includes? output# match#))
+           (is (re-find match# output#)))))))
+
 (deftest sanity-test
-  (sut/log :info "Hello, World!")
+  (log-expect [" INFO " "[]" "{}" "Hello, World!"]
+              (sut/log :info "Hello, World!"))
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
-      (sut/info "Hello, Tag and UID!")))
+      (log-expect ["[hello/world]" "{uid=1234}" "Hello, Tag and UID!"]
+                  (sut/info "Hello, Tag and UID!"))))
   (sut/with-log-tag :outer/tag
     (sut/with-log-tag :inner/tag
-      (sut/info "Hello, Outer/Inner Tag!")))
+      (log-expect ["[outer/tag, inner/tag]" "{}" "Hello, Outer/Inner Tag!"]
+                  (sut/info "Hello, Outer/Inner Tag!"))))
   (sut/with-log-uuid
-    (sut/fatal "Hello, UUID!"))
-  (is true))
+    (log-expect [" FATAL " #"\[[-0-9a-f]+\]" "{}" "Hello, UUID!"]
+                (sut/fatal "Hello, UUID!"))))
 
 (deftest supplier-test
   (sut/info (reify org.apache.logging.log4j.util.MessageSupplier
