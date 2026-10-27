@@ -17,8 +17,8 @@
   `(do
      ;; ensure log is clear before running the test:
      (spit log-file "")
-     ;; run the test:
-     (do ~@body)
+     ;; run the test and ensure logging returns nil!
+     (is (nil? (do ~@body)))
      (let [output# (slurp log-file)]
        (doseq [match# ~matches]
          (if (string? match#)
@@ -118,7 +118,7 @@
          (sut/with-log-tag :main/tag
            (future
              (sut/info "Hello, Basic Future!")
-             (deliver p true))))
+             (deliver p nil))))
        @p)))
   (let [p (promise)]
     (log-expect
@@ -128,7 +128,7 @@
          (sut/with-log-tag :main/tag
            (future
              (sut/info "Hello, Empty Context Future!")
-             (deliver p true))))
+             (deliver p nil))))
        @p)))
   (let [p (promise)]
     (log-expect
@@ -149,7 +149,7 @@
                      (sut/with-log-context {:nested "context"}
                        (sut/with-log-tag :nested/tag
                          (sut/info "Hello, Nested Inherited Context Future!"))))
-                   (deliver p true)))))))
+                   (deliver p nil)))))))
        @p)))
   (let [p (promise)]
     (log-expect
@@ -163,5 +163,5 @@
                (sut/with-log-context {:additional "context"}
                  (sut/with-log-tag :additional/tag
                    (sut/info "Hello, Inherited Context Future!"))))
-             (deliver p true))))
+             (deliver p nil))))
        @p))))
