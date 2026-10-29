@@ -1,7 +1,7 @@
 # Change Log
 
 1.0.10 -- 2026-10-29
-* Add runtime log appender support.
+* Add runtime log appender support. See https://github.com/seancorfield/logging4j2/blob/develop/README.md#appenders
 * Converted tests to a form that actually checks the log output.
 * Added GitHub Actions to automate CI and deployment.
 * Switch build process to use `bb`.
