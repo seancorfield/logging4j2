@@ -1,13 +1,15 @@
 ;; copyright (c) 2024-2026 Sean Corfield
 
 (ns org.corfield.logging4j2
-  (:require [org.corfield.logging4j2.impl :as impl])
+  (:require [org.corfield.logging4j2.appender :as appender]
+            [org.corfield.logging4j2.impl :as impl])
   (:import (org.apache.logging.log4j
             CloseableThreadContext
             Level
             LogManager
             Logger
-            Marker)))
+            Marker)
+           (org.apache.logging.log4j.core Appender)))
 
 (set! *warn-on-reflection* true)
 
@@ -82,3 +84,46 @@
   [& body]
   `(with-log-tag (str (random-uuid))
      ~@body))
+
+(defn layout-formatted
+  "Given an `Appender` and a `LogEvent`, return the fully formatted message, 
+   using the layout from the appender."
+  [appender event]
+  (appender/layout-formatted appender event))
+
+(defn add-event-appender
+  "Given an appender name, a function that will accept two arguments, and an 
+   optional layout pattern, create a log4j2 `Appender`, start it up, and 
+   register it with the logging system.
+
+   The function will be called with the `Appender` and an immutable `LogEvent`.
+
+   The layout pattern %m%n will be used if none is provided, producing a plain
+   message with a trailing newline, suitable for writing to a file.
+
+   Returns a no-arg function that can be called to stop/deactivate the appender."
+  ([appender-name handler] (add-event-appender appender-name handler "%m%n"))
+  ([appender-name handler pattern]
+   (appender/register-appender (appender/make-event-appender appender-name handler pattern))))
+
+(defn add-message-appender
+  "Given an appender name, a function that will accept a `String`, and an
+   optional layout pattern, create a log4j2 `Appender`, start it up, and 
+   register it with the logging system.
+
+   The string passed to the handler function will be the formatted message from 
+   the `LogEvent`, using the layout pattern from the appender.
+
+   If no layout pattern is provided, the default pattern %m will be used, so
+   there will be no trailing newline.
+
+   Returns a no-arg function that can be called to stop/deactivate the appender."
+  ([appender-name handler] (add-message-appender appender-name handler "%m"))
+  ([appender-name handler pattern]
+   (appender/register-appender
+    (appender/make-message-appender appender-name handler pattern))))
+
+(defn get-appender
+  "Retrieve an appender by name from the current configuration."
+  ^Appender [appender-name]
+  (appender/get-appender appender-name))

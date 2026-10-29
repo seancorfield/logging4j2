@@ -26,4 +26,4 @@
   :1.12 {:override-deps {org.clojure/clojure {:mvn/version "1.12.6"}}}
   :1.13 {:override-deps {org.clojure/clojure {:mvn/version "1.13.0-alpha11"}}}
 
-  :neil {:project {:version "1.0.9"}}}}
+  :neil {:project {:version "1.0.10"}}}}

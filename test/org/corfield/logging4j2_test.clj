@@ -5,7 +5,8 @@
   (:require [clojure.test :refer [deftest is]]
             [clojure.tools.logging :as ctl]
             [org.corfield.logging4j2 :as sut]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:import (org.apache.logging.log4j.core LogEvent)))
 
 (set! *warn-on-reflection* true)
 
@@ -76,6 +77,49 @@
     (log-expect
      [" FATAL " #"\[[-0-9a-f]+\]" "{}" "//" "Hello, UUID!"]
      (sut/fatal "Hello, UUID!"))))
+
+(deftest appender-test
+  (let [events   (atom [])
+        evt-strs (atom [])
+        layout   "%d{HH:mm:ss} [%t] %-5level %logger{36} - %m%n"
+        stop-evt (sut/add-event-appender "test-event-appender"
+                                         (fn [appender event]
+                                           (swap! events conj event)
+                                           (swap! evt-strs conj (sut/layout-formatted appender event)))
+                                         layout)
+        messages (atom [])
+        stop-msg (sut/add-message-appender "test-message-appender" #(swap! messages conj %))]
+    (is (= "test-event-appender"
+           (.getName (sut/get-appender "test-event-appender"))))
+    (is (= layout
+           (.toString (.getLayout (sut/get-appender "test-event-appender")))))
+    (is (= "test-message-appender"
+           (.getName (sut/get-appender "test-message-appender"))))
+    (is (= "%m"
+           (.toString (.getLayout (sut/get-appender "test-message-appender")))))
+    (sut/info "Hello, Appender!")
+    (sut/warn "Naughty Appender!")
+    (is (= 2 (count @events)))
+    (is (= ["INFO" "WARN"]
+           (mapv #(.name (.getLevel ^LogEvent %)) @events)))
+    (is (= ["Hello, Appender!" "Naughty Appender!"]
+           (mapv #(.getFormattedMessage (.getMessage ^LogEvent %)) @events)))
+    (is (re-find #"[0-9]{2}:[0-9]{2}:[0-9]{2} \[main\] INFO  org.corfield.logging4j2-test - Hello, Appender!\n"
+                 (first @evt-strs)))
+    (is (re-find #"[0-9]{2}:[0-9]{2}:[0-9]{2} \[main\] WARN  org.corfield.logging4j2-test - Naughty Appender!\n"
+                 (second @evt-strs)))
+    (is (= ["Hello, Appender!" "Naughty Appender!"] @messages))
+    (stop-msg)
+    (sut/error "Bad Appender!")
+    (is (= 3 (count @events)))
+    (is (= ["INFO" "WARN" "ERROR"]
+           (mapv #(.name (.getLevel ^LogEvent %)) @events)))
+    (is (= ["Hello, Appender!" "Naughty Appender!" "Bad Appender!"]
+           (mapv #(.getFormattedMessage (.getMessage ^LogEvent %)) @events)))
+    (is (re-find #"[0-9]{2}:[0-9]{2}:[0-9]{2} \[main\] ERROR org.corfield.logging4j2-test - Bad Appender!\n"
+                 (last @evt-strs)))
+    (is (= ["Hello, Appender!" "Naughty Appender!"] @messages))
+    (stop-evt)))
 
 (deftest supplier-test
   (log-expect
