@@ -27,8 +27,20 @@
 
 (deftest sanity-test
   (log-expect
+   [" TRACE " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :trace "Hello, World!"))
+  (log-expect
+   [" DEBUG " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :debug "Hello, World!"))
+  (log-expect
    [" INFO " "[]" "{}" "//" "Hello, World!"]
    (sut/log :info "Hello, World!"))
+  (log-expect
+   [" WARN " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :warn "Hello, World!"))
+  (log-expect
+   [" ERROR " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :error "Hello, World!"))
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
       (log-expect
