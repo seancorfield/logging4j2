@@ -41,6 +41,27 @@
   (log-expect
    [" ERROR " "[]" "{}" "//" "Hello, World!"]
    (sut/log :error "Hello, World!"))
+  (log-expect
+   [" FATAL " "[]" "{}" "//" "Hello, World!"]
+   (sut/log :fatal "Hello, World!"))
+  (log-expect
+   [" TRACE " "[]" "{}" "//" "Hello, World!"]
+   (sut/trace "Hello, World!"))
+  (log-expect
+   [" DEBUG " "[]" "{}" "//" "Hello, World!"]
+   (sut/debug "Hello, World!"))
+  (log-expect
+   [" INFO " "[]" "{}" "//" "Hello, World!"]
+   (sut/info "Hello, World!"))
+  (log-expect
+   [" WARN " "[]" "{}" "//" "Hello, World!"]
+   (sut/warn "Hello, World!"))
+  (log-expect
+   [" ERROR " "[]" "{}" "//" "Hello, World!"]
+   (sut/error "Hello, World!"))
+  (log-expect
+   [" FATAL " "[]" "{}" "//" "Hello, World!"]
+   (sut/fatal "Hello, World!"))
   (sut/with-log-tag :hello/world
     (sut/with-log-context {:uid 1234}
       (log-expect
