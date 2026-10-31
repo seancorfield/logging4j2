@@ -188,7 +188,7 @@ message according to the appender's layout pattern.
                                ...)
                              (let [log-msg (logger/layout-formatted appender event)]
                                ;; that is the fully-formatted log message based on
-                               ;; the layout provided (date, thread name, level, 
+                               ;; the layout provided (time, thread name, level, 
                                ;; logger name, and message)
                                ...))
                            "%d{HH:mm:ss} [%t] %-5level %logger{36} - %m%n")
