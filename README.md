@@ -210,6 +210,8 @@ I prefer configuration via properties files, so I typically have
 something like this in `resources/log4j2.properties`:
 
 ```properties
+property.filename = /path/to/logs/myapp
+
 rootLogger.level = info
 rootLogger.appenderRef.stdout.ref = STDOUT
 rootLogger.appenderRef.file.ref = logfile
@@ -219,7 +221,18 @@ appender.console.name = STDOUT
 appender.console.filter.threshold.type = ThresholdFilter
 appender.console.filter.threshold.level = info
 appender.console.layout.type = PatternLayout
-appender.console.layout.pattern = [%c] %x %X %highlight{%m}%n
+appender.console.layout.pattern = [%c] %x %X (%marker) %highlight{%m}%n
+
+appender.rolling.type = RollingFile
+appender.rolling.name = logfile
+appender.rolling.fileName = ${filename}.log
+appender.rolling.filePattern = ${filename}-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz
+appender.rolling.layout.type = PatternLayout
+appender.rolling.layout.pattern = %d{DEFAULT} %-5p [%c] - %x %X (%marker) - %m%n
+appender.rolling.policies.type = SizeBasedTriggeringPolicy
+appender.rolling.policies.size = 10MB
+appender.rolling.strategy.type = DefaultRolloverStrategy
+appender.rolling.strategy.max = 5
 ```
 
 For development, I usually have a second properties file that is in a dev-only
@@ -231,7 +244,6 @@ monitorInterval = 30
 
 rootLogger.level = debug
 rootLogger.appenderRef.stdout.ref = STDOUT
-rootLogger.appenderRef.file.ref = logfile
 
 appender.console.type = Console
 appender.console.name = STDOUT
